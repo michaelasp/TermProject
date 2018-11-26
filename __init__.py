@@ -4,12 +4,14 @@ import sqlite3
 import string
 from sqlite3 import Error
 from tkinter import *
-import changeDB
+from changeDB import *
 from createDB import *
+from select import *
+
 
 create_connection("db/user.db")
 conn = sqlite3.connect("db/user.db")
-
+select_gpx(conn, 3)
 # Updated Animation Starter Code
 
 from tkinter import *
@@ -43,9 +45,11 @@ def keyPressed(event, data):
             data.newUser += event.keysym
         elif event.keysym == "BackSpace" and data.newUser != "":
             data.newUser = data.newUser[:-1]
-        elif event.keysym == "return"
-
-    
+        elif event.keysym == "Return" and data.newUser != '':
+            data.id = add_user(conn, data.newUser)
+            data.newUser = ""
+            data.mode = "view"
+             
 
 def timerFired(data):
     pass

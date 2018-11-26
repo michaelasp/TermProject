@@ -24,16 +24,11 @@ def test():
     conn = create_connection(database)
     with conn:
         # create a new project
-        user = ('Michael',)
+        user = ('Bepis Man',)
         user_id = create_user(conn, user)
         # tasks
-        with open('gpx/nstar.gpx', 'r') as gpx:
-            gpx_file = gpx.read()
-    
-        gpx_1 = ('nstar', gpx_file,user_id)
- 
-        # create tasks
-        create_gpxFile(conn,gpx_1)
+        gpx = open('gpx/nstar.gpx', 'r')
+        add_gpxFile(conn, 'nstar', gpx, user_id )
 
 def add_user(conn, name):
     with conn:
@@ -43,6 +38,8 @@ def add_user(conn, name):
 
 def add_gpxFile(conn, name, gpxFile, user):
     with conn:
+        gpxFile = gpxFile.read()
         gpx = (name, gpxFile, user)
         gpx_id = create_gpxFile(conn, gpx)
     return gpx_id
+test()
