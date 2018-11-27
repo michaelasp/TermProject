@@ -1,4 +1,5 @@
 from findFolder import *
+from changeDB import *
 def retrieveFiles(data):
     (folders, files) = findGPX(data.path)
     totalPages = (len(files) + len(folders)) // data.pageLength
@@ -12,5 +13,16 @@ def retrieveFiles(data):
         else:
             end = len(files) - start
             return files[start:start+end] + folders[:(start+data.pageLength-end)]
+
+def addGPX(data, selected):
+    name = data.files[selected]
+    if data.path == ".":
+        gpxFile = data.files[selected]
+    else:
+        gpxFile = data.path + data.files[selected]
+    gpx = open(gpxFile, 'r')
+    add_gpxFile(data.conn, name, gpx, data.id)
+
+
 
 

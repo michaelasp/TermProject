@@ -6,6 +6,7 @@ from tkinter import *
 from createDB import *
 from views import *
 from controllers import *
+from models import *
 # Updated Animation Starter Code
  
 from tkinter import *
@@ -31,10 +32,14 @@ def mousePressed(event, data):
         mouseView(event, data)
     elif data.mode == "addGPX":
         mouseAddGPX(event, data)
+    
+
 
 def keyPressed(event, data):
     if data.mode == "create":
         keyCreate(event, data)
+    elif data.mode == "addGPX":
+        keyAddGPX(event, data)
              
 def timerFired(data):
     pass
@@ -48,6 +53,8 @@ def redrawAll(canvas, data):
         viewScreen(canvas, data)
     elif data.mode == "addGPX":
         viewAddGPX(canvas, data)
+    elif data.mode == "progress":
+        viewProgress(canvas, data)
 
 
 def run(width=300, height=300):
