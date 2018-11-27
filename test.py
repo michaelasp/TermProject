@@ -10,6 +10,7 @@ for track in gpx.tracks:
     for segment in track.segments:
         for point in segment.points:
             #print('Point at ({0},{1}) -> {2}'.format(point.latitude, point.longitude, point.elevation))
+            
             print(dx[1])
             if dx[0] == 0:
                 dx = (point.elevation,0)

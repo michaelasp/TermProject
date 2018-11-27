@@ -1,4 +1,3 @@
-from select import *
 from tkinter import *
 from models import *
 def selectScreen(canvas, data):
@@ -32,5 +31,17 @@ def viewAddGPX(canvas, data):
         canvas.create_text(unitW*7, unitH*2*i, text = data.files[i], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))
 
+def viewProgress(canvas, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    canvas.create_text(unitW*5, unitH*9, text = data.milesRidden, anchor = NW, font = "Arial " + 
+        str(int(unitH)))
+
+def viewLogin(canvas, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    for i in range(len(data.curUsers)):
+        canvas.create_text(unitW*7, unitH*2*i, text = data.curUsers[i][1], anchor = NW, font = "Arial " + 
+        str(int(unitH/2)))    
         
     

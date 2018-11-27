@@ -37,6 +37,7 @@ def createDB():
                                         id integer PRIMARY KEY,
                                         name text NOT NULL,
                                         file text NOT NULL,
+                                        miles_ridden real NOT NULL,
                                         user_id integer NOT NULL,
                                         FOREIGN KEY (user_id) REFERENCES users (id)
                                     ); """

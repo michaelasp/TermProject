@@ -24,6 +24,18 @@ def mouseSelect(event, data):
         data.mode = "create"
     elif unitW * 11 <= event.x <= unitW * 18 and unitH * 5 <= event.y <= unitH * 15:
         print("no")
+        data.curUsers = retrieveUsers(data)
+        print(data.curUsers)
+        data.mode = "login"
+
+def mouseLogin(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    selected = int((event.y // (2*unitH)) + data.currentPage * data.pageLength)
+    data.id = data.curUsers[selected][0]
+    data.name = data.curUsers[selected][1]
+    data.mode = "view"
+    data.currentPage = 0
 
 def mouseView(event, data):
     unitW = data.unitW
@@ -32,6 +44,7 @@ def mouseView(event, data):
         data.files = retrieveFiles(data)
         data.mode = "addGPX"
     elif unitW * 1 <= event.x <= unitW * 8 and unitH * 7 <= event.y <= unitH * 13:
+        data.gpxFiles = retrieveGPX(data)
         data.mode = "progress"
 
 def mouseAddGPX(event, data):
@@ -54,6 +67,24 @@ def keyAddGPX(event, data):
     unitH = data.unitH
     if event.keysym == "BackSpace":
         data.mode = "view"
+    elif event.keysym == "Left":
+        if data.currentPage > 0:
+            data.currentPage -= 1
+    elif event.keysym == "Right":
+        if data.currentPage < data.totalPages:
+            data.currentPage += 1
 
-
+def keyLogin(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if event.keysym == "BackSpace":
+        data.mode = "select"
+    elif event.keysym == "Left":
+        if data.currentPage > 0:
+            data.currentPage -= 1
+            data.curUsers = retrieveUsers(data)
+    elif event.keysym == "Right":
+        if data.currentPage < data.totalPages:
+            data.currentPage += 1
+            data.curUsers = retrieveUsers(data)
 

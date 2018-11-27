@@ -7,13 +7,7 @@ from createDB import *
 from views import *
 from controllers import *
 from models import *
-# Updated Animation Starter Code
- 
 from tkinter import *
-
-####################################
-# customize these functions
-####################################
 
 def init(data):
     data.mode = "select"
@@ -24,23 +18,26 @@ def init(data):
     data.path = "."
     data.pageLength = 10
     data.currentPage = 0
+    data.users = select_users(data.conn)
 
 def mousePressed(event, data):
     if data.mode == "select":
         mouseSelect(event, data)
     elif data.mode == "view":
         mouseView(event, data)
+    elif data.mode == "login":
+        mouseLogin(event, data)
     elif data.mode == "addGPX":
         mouseAddGPX(event, data)
-    
-
 
 def keyPressed(event, data):
     if data.mode == "create":
         keyCreate(event, data)
     elif data.mode == "addGPX":
         keyAddGPX(event, data)
-             
+    elif data.mode == "login":
+        keyLogin(event, data)
+
 def timerFired(data):
     pass
 
@@ -49,6 +46,8 @@ def redrawAll(canvas, data):
         selectScreen(canvas, data)
     elif data.mode == "create":
         createScreen(canvas, data)
+    elif data.mode == "login":
+        viewLogin(canvas, data)
     elif data.mode == "view":
         viewScreen(canvas, data)
     elif data.mode == "addGPX":
