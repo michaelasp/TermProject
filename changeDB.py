@@ -42,4 +42,3 @@ def add_gpxFile(conn, name, gpxFile, user):
         gpx = (name, gpxFile, user)
         gpx_id = create_gpxFile(conn, gpx)
     return gpx_id
-test()

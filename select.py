@@ -7,5 +7,13 @@ def select_gpx(conn, id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM gpxFiles WHERE user_id=?",(id,))
     rows = cur.fetchall()
+    print(rows)
     return rows
+
+def select_name(conn, id):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE id=?",(id,))
+    user = cur.fetchall()
+    print(user[0][1])
+    return user[0][1]
 

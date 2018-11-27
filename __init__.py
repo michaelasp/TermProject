@@ -1,19 +1,13 @@
 import gpxpy
 import os
 import sqlite3
-import string
 from sqlite3 import Error
 from tkinter import *
-from changeDB import *
 from createDB import *
-from select import *
-
-
-create_connection("db/user.db")
-conn = sqlite3.connect("db/user.db")
-select_gpx(conn, 3)
+from views import *
+from controllers import *
 # Updated Animation Starter Code
-
+ 
 from tkinter import *
 
 ####################################
@@ -25,32 +19,23 @@ def init(data):
     data.unitW = data.width/20
     data.unitH = data.height/20
     data.newUser = ""
+    data.conn = create_connection("db/user.db")
+    data.path = "."
+    data.pageLength = 10
+    data.currentPage = 0
 
 def mousePressed(event, data):
-    unitW = data.unitW
-    unitH = data.unitH
     if data.mode == "select":
-        if unitW*2 <= event.x <= unitW * 9 and unitH * 5 <= event.y <= unitH *15:
-            print("yes")
-            data.mode = "create"
-        elif unitW * 11 <= event.x <= unitW * 18 and unitH * 5 <= event.y <= unitH *15:
-            print("no")
-
-
+        mouseSelect(event, data)
+    elif data.mode == "view":
+        mouseView(event, data)
+    elif data.mode == "addGPX":
+        mouseAddGPX(event, data)
 
 def keyPressed(event, data):
     if data.mode == "create":
-        print(event.keysym)
-        if event.keysym in string.ascii_uppercase or event.keysym in string.ascii_lowercase:
-            data.newUser += event.keysym
-        elif event.keysym == "BackSpace" and data.newUser != "":
-            data.newUser = data.newUser[:-1]
-        elif event.keysym == "Return" and data.newUser != '':
-            data.id = add_user(conn, data.newUser)
-            data.newUser = ""
-            data.mode = "view"
+        keyCreate(event, data)
              
-
 def timerFired(data):
     pass
 
@@ -59,20 +44,10 @@ def redrawAll(canvas, data):
         selectScreen(canvas, data)
     elif data.mode == "create":
         createScreen(canvas, data)
-
-def selectScreen(canvas, data):
-    unitW = data.unitW
-    unitH = data.unitH
-
-    canvas.create_rectangle(unitW*2, unitH*5, unitW*9, unitH*15)
-    canvas.create_rectangle(unitW*11, unitH*5, unitW*18, unitH*15)
-
-def createScreen(canvas, data):
-    unitW = data.unitW
-    unitH = data.unitH
-    canvas.create_rectangle(unitW*4, unitH*8, unitW*16, unitH*12)
-    canvas.create_text(unitW*5, unitH*9, text = data.newUser, anchor = NW, font = "Arial " + 
-        str(int(unitH)))
+    elif data.mode == "view":
+        viewScreen(canvas, data)
+    elif data.mode == "addGPX":
+        viewAddGPX(canvas, data)
 
 
 def run(width=300, height=300):
