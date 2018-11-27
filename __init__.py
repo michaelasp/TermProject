@@ -29,6 +29,8 @@ def mousePressed(event, data):
         mouseLogin(event, data)
     elif data.mode == "addGPX":
         mouseAddGPX(event, data)
+    elif data.mode == "progress":
+        mouseProgress(event, data)
 
 def keyPressed(event, data):
     if data.mode == "create":
@@ -37,6 +39,8 @@ def keyPressed(event, data):
         keyAddGPX(event, data)
     elif data.mode == "login":
         keyLogin(event, data)
+    elif data.mode == "pickRide":
+        keyRides(event, data)
 
 def timerFired(data):
     pass
@@ -54,6 +58,8 @@ def redrawAll(canvas, data):
         viewAddGPX(canvas, data)
     elif data.mode == "progress":
         viewProgress(canvas, data)
+    elif data.mode == "pickRide":
+        viewRides(canvas, data)
 
 
 def run(width=300, height=300):

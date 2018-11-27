@@ -44,7 +44,7 @@ def mouseView(event, data):
         data.files = retrieveFiles(data)
         data.mode = "addGPX"
     elif unitW * 1 <= event.x <= unitW * 8 and unitH * 7 <= event.y <= unitH * 13:
-        data.gpxFiles = retrieveGPX(data)
+        retrieveGPXMiles(data)
         data.mode = "progress"
 
 def mouseAddGPX(event, data):
@@ -70,15 +70,18 @@ def keyAddGPX(event, data):
     elif event.keysym == "Left":
         if data.currentPage > 0:
             data.currentPage -= 1
+            data.files = retrieveFiles(data)
     elif event.keysym == "Right":
         if data.currentPage < data.totalPages:
             data.currentPage += 1
+            data.files = retrieveFiles(data)
 
 def keyLogin(event, data):
     unitW = data.unitW
     unitH = data.unitH
     if event.keysym == "BackSpace":
         data.mode = "select"
+        data.currentPage = 0
     elif event.keysym == "Left":
         if data.currentPage > 0:
             data.currentPage -= 1
@@ -87,4 +90,27 @@ def keyLogin(event, data):
         if data.currentPage < data.totalPages:
             data.currentPage += 1
             data.curUsers = retrieveUsers(data)
+
+def mouseProgress(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
+        data.curRides = retrieveRides(data)
+        data.mode = "pickRide"
+
+
+def keyRides(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if event.keysym == "BackSpace":
+        data.mode = "progress"
+        data.currentPage = 0
+    elif event.keysym == "Left":
+        if data.currentPage > 0:
+            data.currentPage -= 1
+            data.curRides = retrieveRides(data)
+    elif event.keysym == "Right":
+        if data.currentPage < data.totalPages:
+            data.currentPage += 1
+            data.curRides = retrieveRides(data)
 

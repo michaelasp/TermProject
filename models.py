@@ -22,6 +22,12 @@ def retrieveUsers(data):
     start = data.currentPage * data.pageLength
     return data.users[start:start+data.pageLength]
 
+def retrieveRides(data):
+    data.totalRides = select_gpx(data.conn, data.id)
+    data.totalPages = len(data.totalRides) // data.pageLength
+    start = data.currentPage * data.pageLength
+    return data.totalRides[start:start+data.pageLength]
+
 def addGPX(data, selected):
     name = data.files[selected]
     if data.path == ".":
@@ -31,9 +37,15 @@ def addGPX(data, selected):
     gpx = open(gpxFile, 'r')
     add_gpxFile(data.conn, name, gpx, data.id)
 
-def retrieveGPX(data):
+def retrieveGPXMiles(data):
     files = select_gpx(data.conn, data.id)
-    return files
+    data.totalRides = len(files)
+    data.totalMiles = 0
+    for gpx in files:
+        data.totalMiles += gpx[3]
+    data.totalMiles = int(data.totalMiles)
+
+
 
 
 

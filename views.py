@@ -34,8 +34,20 @@ def viewAddGPX(canvas, data):
 def viewProgress(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
-    canvas.create_text(unitW*5, unitH*9, text = data.milesRidden, anchor = NW, font = "Arial " + 
-        str(int(unitH)))
+    canvas.create_text(unitW*5, unitH*9, text = "You have done " + str(data.totalMiles) + " Miles", anchor = NW, font = "Arial " + 
+        str(int(unitH/4)))
+    canvas.create_text(unitW*5, unitH*10, text = "You have done " + str(data.totalRides) + " Activities", anchor = NW, font = "Arial " + 
+        str(int(unitH/4)))
+    canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13)
+    canvas.create_text(unitW*13, unitH*9, text = "View Activities", anchor = NW, font = "Arial " + 
+        str(int(unitH/1.5)))
+
+def viewRides(canvas, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    for i in range(len(data.curRides)):
+        canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
+        str(int(unitH/2)))
 
 def viewLogin(canvas, data):
     unitW = data.unitW
