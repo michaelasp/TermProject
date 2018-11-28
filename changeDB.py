@@ -2,8 +2,8 @@ import sqlite3
 from sqlite3 import Error
 from createDB import create_connection
 import os
-from math import sin, cos, sqrt, atan2, radians
 import gpxpy
+import models
 
 def create_user(conn, user):
     sql = ''' INSERT INTO users(name)
@@ -47,7 +47,7 @@ def add_gpxFile(conn, name, gpxFile, user):
     return gpx_id
 
 def findGpxData(gpxFile):
-    R = 6373.0
+
     gpx = gpxpy.parse(gpxFile)
     #gpxpy starter code https://github.com/tkrajina/gpxpy
     dx = (0,None)
@@ -61,17 +61,8 @@ def findGpxData(gpxFile):
             for point in segment.points:
                     if dx[1] == None:
                         dx = (0,(point.latitude, point.longitude))
-                    #Find distance from lattitude longitude https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
                     else:	
-                        lat1 = radians(dx[1][0])
-                        lon1 = radians(dx[1][1])
-                        lat2 = radians(point.latitude)
-                        lon2 = radians(point.longitude)
-                        dlon = lon2 - lon1
-                        dlat = lat2 - lat1
-                        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-                        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-                        distance = R * c
+                        distance = models.findDistance(dx[1][0], dx[1][1], point.latitude, point.longitude)
                         dx = (dx[0] + distance, (point.latitude, point.longitude))
                     if min_lat == None or point.latitude < min_lat:
                         min_lat = point.latitude
@@ -83,4 +74,5 @@ def findGpxData(gpxFile):
                         max_lon = point.longitude        
 
     return (dx[0], min_lat, min_lon, max_lat, max_lon)
+
 

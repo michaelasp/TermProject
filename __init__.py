@@ -77,7 +77,7 @@ def redrawAll(canvas, data):
     elif data.mode == "pickRecommend":
         viewPickRecommend(canvas,data)
     elif data.mode == "recommend":
-        viewRecommend(canvas, data)
+        plotDifficulty(canvas, data)
 
 
 def run(width=300, height=300):
