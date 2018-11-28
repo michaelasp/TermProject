@@ -55,5 +55,42 @@ def viewLogin(canvas, data):
     for i in range(len(data.curUsers)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curUsers[i][1], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))    
-        
+
+def plotPoints(canvas, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    marginX = unitW
+    marginY = unitH
+    (_,_,gpxFile,_, min_lat, min_lon, max_lat, max_lon,_) = data.plot
+    totalChangex = max_lat - min_lat
+    totalChangey = max_lon - min_lon
+    gpx = gpxpy.parse(gpxFile)
+    i=0
+    point1 = None
+    for track in gpx.tracks:
+        for segment in track.segments:
+            for point in segment.points:
+                posX = point.latitude - min_lat
+                posY = point.longitude - min_lon
+                ratioX = posX / totalChangex
+                ratioY = posY / totalChangey
+                if i == 0:
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                else:
+                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                i += 1
+
+def viewPickRecommend(canvas, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    for i in range(len(data.curRides)):
+        canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
+        str(int(unitH/2)))
+
+def viewRecommend(canvas, data):
+    pass
+
+
+
     

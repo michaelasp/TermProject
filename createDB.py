@@ -38,6 +38,10 @@ def createDB():
                                         name text NOT NULL,
                                         file text NOT NULL,
                                         miles_ridden real NOT NULL,
+                                        min_lat real NOT NULL,
+                                        min_lon real NOT NULL,
+                                        max_lat real NOT NULL,
+                                        max_lon real NOT NULL,
                                         user_id integer NOT NULL,
                                         FOREIGN KEY (user_id) REFERENCES users (id)
                                     ); """

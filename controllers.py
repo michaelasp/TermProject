@@ -2,19 +2,6 @@ import string
 from changeDB import *
 from models import *
 
-def keyCreate(event, data):
-    unitW = data.unitW
-    unitH = data.unitH
-    print(event.keysym)
-    if event.keysym in string.ascii_uppercase or event.keysym in string.ascii_lowercase:
-        data.newUser += event.keysym
-    elif event.keysym == "BackSpace" and data.newUser != "":
-        data.newUser = data.newUser[:-1]
-    elif event.keysym == "Return" and data.newUser != '':
-        data.id = add_user(data.conn, data.newUser)
-        data.name = data.newUser
-        data.newUser = ""
-        data.mode = "view"
 
 def mouseSelect(event, data):
     unitW = data.unitW
@@ -31,11 +18,12 @@ def mouseSelect(event, data):
 def mouseLogin(event, data):
     unitW = data.unitW
     unitH = data.unitH
-    selected = int((event.y // (2*unitH)) + data.currentPage * data.pageLength)
-    data.id = data.curUsers[selected][0]
-    data.name = data.curUsers[selected][1]
-    data.mode = "view"
-    data.currentPage = 0
+    selected = int((event.y // (2*unitH)))
+    if selected <= len(data.curUsers) - 1:
+        data.id = data.curUsers[selected][0]
+        data.name = data.curUsers[selected][1]
+        data.mode = "view"
+        data.currentPage = 0
 
 def mouseView(event, data):
     unitW = data.unitW
@@ -46,11 +34,15 @@ def mouseView(event, data):
     elif unitW * 1 <= event.x <= unitW * 8 and unitH * 7 <= event.y <= unitH * 13:
         retrieveGPXMiles(data)
         data.mode = "progress"
+    elif unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
+        data.curRides = retrieveRides(data)
+        data.mode = "pickRecommend"
 
 def mouseAddGPX(event, data):
     unitW = data.unitW
     unitH = data.unitH
-    selected = int((event.y // (2*unitH)) + data.currentPage * data.pageLength)
+    selected = int((event.y // (2*unitH)))
+    print(data.files)
     if selected <= len(data.files) - 1:
         if "." not in data.files[selected]:
             if data.path == ".":
@@ -61,6 +53,43 @@ def mouseAddGPX(event, data):
             print("yes")
             addGPX(data, selected)
     data.files = retrieveFiles(data)
+
+def mouseProgress(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
+        data.curRides = retrieveRides(data)
+        data.mode = "pickRide"
+
+def mouseRides(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    selected = int((event.y // (2*unitH)))
+    if selected <= len(data.curRides) - 1:
+        data.plot = data.curRides[selected]
+        data.mode = "plot"
+
+def mousePickRecommend(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    selected = int((event.y // (2*unitH)))
+    if selected <= len(data.curRides) - 1:
+        data.picked = data.curRides[selected]
+        data.mode = "recommend"
+
+def keyCreate(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    print(event.keysym)
+    if event.keysym in string.ascii_uppercase or event.keysym in string.ascii_lowercase:
+        data.newUser += event.keysym
+    elif event.keysym == "BackSpace" and data.newUser != "":
+        data.newUser = data.newUser[:-1]
+    elif event.keysym == "Return" and data.newUser != '':
+        data.id = add_user(data.conn, data.newUser)
+        data.name = data.newUser
+        data.newUser = ""
+        data.mode = "view"
 
 def keyAddGPX(event, data):
     unitW = data.unitW
@@ -91,13 +120,6 @@ def keyLogin(event, data):
             data.currentPage += 1
             data.curUsers = retrieveUsers(data)
 
-def mouseProgress(event, data):
-    unitW = data.unitW
-    unitH = data.unitH
-    if unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
-        data.curRides = retrieveRides(data)
-        data.mode = "pickRide"
-
 
 def keyRides(event, data):
     unitW = data.unitW
@@ -114,3 +136,25 @@ def keyRides(event, data):
             data.currentPage += 1
             data.curRides = retrieveRides(data)
 
+def keyPickReccomend(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if event.keysym == "BackSpace":
+        data.mode = "view"
+        data.currentPage = 0
+    elif event.keysym == "Left":
+        if data.currentPage > 0:
+            data.currentPage -= 1
+            data.curRides = retrieveRides(data)
+    elif event.keysym == "Right":
+        if data.currentPage < data.totalPages:
+            data.currentPage += 1
+            data.curRides = retrieveRides(data)
+
+def keyProgress(event, data):
+    if event.keysym == "BackSpace":
+        data.mode = "view"
+
+def keyPlot(event, data):
+    if event.keysym == "BackSpace":
+        data.mode = "pickRide"

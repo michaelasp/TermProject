@@ -45,6 +45,9 @@ def retrieveGPXMiles(data):
         data.totalMiles += gpx[3]
     data.totalMiles = int(data.totalMiles)
 
+def reccommendTrail(data):
+    pass
+
 
 
 

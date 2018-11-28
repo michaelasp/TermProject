@@ -31,6 +31,11 @@ def mousePressed(event, data):
         mouseAddGPX(event, data)
     elif data.mode == "progress":
         mouseProgress(event, data)
+    elif data.mode == "pickRide":
+        mouseRides(event, data)
+    elif data.mode == "pickRecommend":
+        mousePickRecommend(event, data)
+
 
 def keyPressed(event, data):
     if data.mode == "create":
@@ -41,6 +46,13 @@ def keyPressed(event, data):
         keyLogin(event, data)
     elif data.mode == "pickRide":
         keyRides(event, data)
+    elif data.mode == "progress":
+        keyProgress(event, data)
+    elif data.mode == "plot":
+        keyPlot(event, data)
+    elif data.mode == "pickRecommend":
+        keyPickReccomend(event, data)
+
 
 def timerFired(data):
     pass
@@ -60,6 +72,12 @@ def redrawAll(canvas, data):
         viewProgress(canvas, data)
     elif data.mode == "pickRide":
         viewRides(canvas, data)
+    elif data.mode == "plot":
+        plotPoints(canvas, data)
+    elif data.mode == "pickRecommend":
+        viewPickRecommend(canvas,data)
+    elif data.mode == "recommend":
+        viewRecommend(canvas, data)
 
 
 def run(width=300, height=300):
