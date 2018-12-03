@@ -42,7 +42,7 @@ def viewProgress(canvas, data):
     unitH = data.unitH
     canvas.create_text(unitW*5, unitH*9, text = "You have done " + str(data.totalMiles) + " Miles", anchor = NW, font = "Arial " + 
         str(int(unitH/4)))
-    canvas.create_text(unitW*5, unitH*10, text = "You have done " + str(data.totalRides) + " Activities", anchor = NW, font = "Arial " + 
+    canvas.create_text(unitW*5, unitH*10, text = "You have done " + str(len(data.totalRides)) + " Activities", anchor = NW, font = "Arial " + 
         str(int(unitH/4)))
     canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13)
     canvas.create_text(unitW*13, unitH*9, text = "View Activities", anchor = NW, font = "Arial " + 
@@ -78,15 +78,35 @@ def plotPoints(canvas, data):
             for point in segment.points:
                 posX = point.latitude - min_lat
                 posY = point.longitude - min_lon
-                ratioX = posX / totalChangex
-                ratioY = posY / totalChangey
+                #posX, posY = float("%.3f" % (2 * posX)), float("%.3f" % (2 * posY))
+
+                ratioX = posX / (totalChangex)
+                ratioY = posY / (totalChangey)
                 if i == 0:
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 else:
                     canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 i += 1
-
+    sections = findSections(data)
+    j = 0
+    for section in sections:
+        i = 0
+        for point in section:
+            r = (255 - 50 * j)%255 
+            rgb = rgbString(r, 255-r, 0)
+            ratioX, ratioY = point
+            ratioX /= totalChangex
+            ratioY /= totalChangey
+            if i == 0:
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                    canvas.create_text(point1, text = "here" + str(j))
+            else:
+                canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY), fill = rgb, width = 2)
+                point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+            i += 1
+        j += 1
+        
 def plotDifficulty(canvas, data):
     unitW = data.unitW
     unitH = data.unitH

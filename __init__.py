@@ -89,7 +89,7 @@ def run(width=300, height=300):
         canvas.update()    
 
     def mousePressedWrapper(event, canvas, data):
-        mousePressed(event, data)
+        mousePressed(event, data)   
         redrawAllWrapper(canvas, data)
 
     def keyPressedWrapper(event, canvas, data):
