@@ -52,6 +52,8 @@ def keyPressed(event, data):
         keyPlot(event, data)
     elif data.mode == "pickRecommend":
         keyPickReccomend(event, data)
+    elif data.mode == "recommend":
+        keyReccomend(event, data)
 
 
 def timerFired(data):
@@ -79,7 +81,7 @@ def redrawAll(canvas, data):
     elif data.mode == "recommend":
         plotDifficulty(canvas, data)
 
-
+#Run function from tkinter notes
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
         canvas.delete(ALL)

@@ -1,7 +1,7 @@
 from findFolder import *
 from changeDB import add_gpxFile
 from select import *
-from math import sin, cos, sqrt, atan2, radians
+from math import sin, cos, sqrt, atan, radians, atan2
 import gpxpy
 import copy
 
@@ -64,8 +64,7 @@ def findDistance(lat1, lon1, lat2, lon2):
     distance = R * c
     return distance
 
-def findSections(data):
-    (_,_,gpxFile,_, min_lat, min_lon, max_lat, max_lon,_) = data.plot
+def findSections(gpxFile):
     gpx = gpxpy.parse(gpxFile)
     i=0
     plotNext = False
@@ -76,56 +75,53 @@ def findSections(data):
     betweenTracker = []
     looping = False
     loopDist = 0
-    tolerance = 0.0005
+    tolerance = 0.0009
     initPoint = None
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
-                posX = point.latitude - min_lat
-                posY = point.longitude - min_lon
+                posX = point.latitude
+                posY = point.longitude
                 #posX, posY = float("%.3f" % (2 * posX)), float("%.3f" % (2 * posY))
                 if i != 0:
                     plotNext = True
                     #checks through all current points to see if a new one can be added or not
-                    for (lastX, lastY) in last:
+                    for (lastX, lastY, elev) in last:
                         if abs(posX - lastX) < tolerance and abs(posY - lastY) < tolerance:
                             plotNext = False
-                            curPoint = (lastX, lastY)
+                            curPoint = (lastX, lastY, elev)
                             break
                 if i == 0:
-                    last.append((posX, posY))
-                    section.append((posX, posY))
-                    initPoint = (posX, posY)
+                    last.append((posX, posY, point.elevation))
+                    section.append((posX, posY, point.elevation))
+                    initPoint = (posX, posY, point.elevation)
                 elif plotNext == True:
-                    last.append((posX, posY))
+                    last.append((posX, posY, point.elevation))
                     if looping == True:
                         loop = findFloats(section, section[-1])[0]
                         assert(section[loop] == section[-1])
                         loopDist = len(section) - loop
                         #in order not to have short loops
-                        if len(section[-loopDist:-1]) > 10: 
+                        if len(section[-loopDist:-1]) > 20: 
                             sections.append(section[-loopDist:])
                             assert(section[-loopDist:][0] == section[-loopDist:][-1])
                             section = section[:-loopDist+1]
                             looping = False
                     inBetween[(initPoint, last[-1])] = copy.copy(betweenTracker)
                     betweenTracker = []
-                    initPoint = (posX, posY)
-                    section.append((posX, posY))
+                    initPoint = (posX, posY, point.elevation)
+                    section.append((posX, posY, point.elevation))
                     plotNext = False
                 else:
-                    (segEndX, segEndY) = section[-1]
+                    (segEndX, segEndY, _) = section[-1]
                     if abs(posX - segEndX) < tolerance and abs(posY - segEndY) < tolerance:
-                        betweenTracker.append((posX, posY))
+                        betweenTracker.append((posX, posY, point.elevation))
                     else:
                         looping = True
                         section.append(curPoint)
                         inBetween[(initPoint, curPoint)] = copy.copy(betweenTracker)
                         betweenTracker = []
                         initPoint = curPoint
-
-
-
                 i += 1
     sections.append(section)
     first = set()
@@ -157,15 +153,40 @@ def findFloats(listOfFloats, value):
     return [i for i, tup in enumerate(listOfFloats)
             if abs(tup[0]-value[0]) < 0.00001 and abs(tup[1]-value[1]) < 0.00001]
 
+def analyzeSections(sections):
+    i = 0
+    size = []
+    for section in sections:
+        difficulty = assignDifficulty(section)
+        if i == 0:
+            size.append((difficulty, i))
+        else:
+            for j in range(len(size)):
+                if size[j][0] < difficulty:
+                    size.insert(j, (difficulty, i))
+                    break
+    return size
 
 
 
-
-
-
-
-
-
-
-
-
+        
+def assignDifficulty(section):
+    i = 0
+    avgSteep = 0
+    for point in section:
+        lat, lon, elev = point
+        if i == 0:
+            lastElev = elev
+            lastLat = lat
+            lastLon = lon   
+        else:
+            elevationChange = elev - lastElev
+            distance = findDistance(lastLat, lastLon, lat, lon)*1000
+            ratio = abs(atan(elevationChange/distance))
+            lastLat = point.latitude
+            lastLon = point.longitude
+            lastElev = point.elevation
+            avgSteep += ratio
+        i += 1
+    avgSteep /= i
+    return avgSteep

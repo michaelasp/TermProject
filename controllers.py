@@ -76,6 +76,7 @@ def mousePickRecommend(event, data):
     if selected <= len(data.curRides) - 1:
         data.picked = data.curRides[selected]
         data.mode = "recommend"
+        data.trailType = 0
 
 def keyCreate(event, data):
     unitW = data.unitW
@@ -158,3 +159,13 @@ def keyProgress(event, data):
 def keyPlot(event, data):
     if event.keysym == "BackSpace":
         data.mode = "pickRide"
+
+def keyReccomend(event, data):
+    if event.keysym == "BackSpace":
+        data.mode = "pickRecommend"
+    elif event.keysym == "Left":
+        if data.trailType > 0:
+            data.trailType -= 1
+    elif event.keysym == "Right":
+        if data.trailType < 2:
+            data.trailType += 1

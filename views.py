@@ -88,14 +88,16 @@ def plotPoints(canvas, data):
                     canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 i += 1
-    sections = findSections(data)
+    sections = findSections(gpxFile)
     j = 0
     for section in sections:
         i = 0
         for point in section:
             r = (255 - 20 * j)%255 
             rgb = rgbString(r, 255-r, 0)
-            ratioX, ratioY = point
+            ratioX, ratioY, _ = point
+            ratioX -= min_lat
+            ratioY -= min_lon
             ratioX /= totalChangex
             ratioY /= totalChangey
             if i == 0:
@@ -161,8 +163,39 @@ def viewPickRecommend(canvas, data):
         str(int(unitH/2)))
 
 def viewRecommend(canvas, data):
-    pass
+    unitW = data.unitW
+    unitH = data.unitH
+    marginX = unitW
+    marginY = unitH    
+    trailType = data.trailType
+    (_,_,gpxFile,_, min_lat, min_lon, max_lat, max_lon,_) = data.picked
+    totalChangex = max_lat - min_lat
+    totalChangey = max_lon - min_lon
+    gpx = gpxpy.parse(gpxFile)
+    sections = findSections(gpxFile)
+    i=0
+    point1 = None
+    for track in gpx.tracks:
+        for segment in track.segments:
+            for point in segment.points:
+                posX = point.latitude - min_lat
+                posY = point.longitude - min_lon
+                #posX, posY = float("%.3f" % (2 * posX)), float("%.3f" % (2 * posY))
 
-
+                ratioX = posX / (totalChangex)
+                ratioY = posY / (totalChangey)
+                if i == 0:
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                else:
+                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                i += 1
+    sorted = analyzeSections(sections)
+    if len(sorted) > 2:
+        div = len(sorted) // 3
+        extra = (len(sorted) % 3) // 2
+        sortedFlow = sorted[:] 
+        sortedChal = sorted[]
+        sortedGnar = sorted[]
 
     
