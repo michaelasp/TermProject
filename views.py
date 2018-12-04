@@ -93,7 +93,7 @@ def plotPoints(canvas, data):
     for section in sections:
         i = 0
         for point in section:
-            r = (255 - 50 * j)%255 
+            r = (255 - 20 * j)%255 
             rgb = rgbString(r, 255-r, 0)
             ratioX, ratioY = point
             ratioX /= totalChangex

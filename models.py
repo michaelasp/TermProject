@@ -3,6 +3,7 @@ from changeDB import add_gpxFile
 from select import *
 from math import sin, cos, sqrt, atan2, radians
 import gpxpy
+import copy
 
 def retrieveFiles(data):
     (folders, files) = findGPX(data.path)
@@ -71,9 +72,12 @@ def findSections(data):
     last = []
     section = []
     sections = []
+    inBetween = {}
+    betweenTracker = []
     looping = False
     loopDist = 0
-    tolerance = 0.0008
+    tolerance = 0.0005
+    initPoint = None
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
@@ -91,6 +95,7 @@ def findSections(data):
                 if i == 0:
                     last.append((posX, posY))
                     section.append((posX, posY))
+                    initPoint = (posX, posY)
                 elif plotNext == True:
                     last.append((posX, posY))
                     if looping == True:
@@ -103,18 +108,49 @@ def findSections(data):
                             assert(section[-loopDist:][0] == section[-loopDist:][-1])
                             section = section[:-loopDist+1]
                             looping = False
+                    inBetween[(initPoint, last[-1])] = copy.copy(betweenTracker)
+                    betweenTracker = []
+                    initPoint = (posX, posY)
                     section.append((posX, posY))
                     plotNext = False
                 else:
                     (segEndX, segEndY) = section[-1]
                     if abs(posX - segEndX) < tolerance and abs(posY - segEndY) < tolerance:
-                        pass
+                        betweenTracker.append((posX, posY))
                     else:
                         looping = True
                         section.append(curPoint)
+                        inBetween[(initPoint, curPoint)] = copy.copy(betweenTracker)
+                        betweenTracker = []
+                        initPoint = curPoint
+
+
+
                 i += 1
     sections.append(section)
+    first = set()
+    for i in range(len(sections)):
+        length = len(sections[i])
+        j = 0
+        offset = 0
+        while j < length - 1:
+            dist = len(inBetween[(sections[i][j+offset],sections[i][j+1+offset])])
+            if sections[i][j+offset] not in first and sections[i][j+1+offset] not in first:
+                sections[i] = sections[i][:offset+j+1] + inBetween[(sections[i][j+offset],sections[i][j+1+offset])] + sections[i][j+1+offset:]
+                offset += dist
+                first.add(sections[i][j+1+offset])
+                first.add(sections[i][j+offset])
+                if i == 0 and j == 0:
+                    print(first)
+            else:
+                sections[i] = sections[i][:offset+j] + inBetween[(sections[i][j+offset],sections[i][j+1+offset])] + sections[i][j+1+offset:]
+                offset += dist - 1
+            j += 1
+        first = set()
     return sections
+
+        
+
 
 #https://stackoverflow.com/questions/24935938/how-to-find-a-float-number-in-a-list , modified to use tuples
 def findFloats(listOfFloats, value):
