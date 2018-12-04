@@ -64,7 +64,8 @@ def findDistance(lat1, lon1, lat2, lon2):
     distance = R * c
     return distance
 
-def findSections(gpxFile):
+def findSections(full):
+    (_,_,gpxFile,_, min_lat, min_lon, max_lat, max_lon,_) = full
     gpx = gpxpy.parse(gpxFile)
     i=0
     plotNext = False
@@ -75,7 +76,7 @@ def findSections(gpxFile):
     betweenTracker = []
     looping = False
     loopDist = 0
-    tolerance = 0.0009
+    tolerance = 0.0008
     initPoint = None
     for track in gpx.tracks:
         for segment in track.segments:
@@ -102,7 +103,7 @@ def findSections(gpxFile):
                         assert(section[loop] == section[-1])
                         loopDist = len(section) - loop
                         #in order not to have short loops
-                        if len(section[-loopDist:-1]) > 20: 
+                        if len(section[-loopDist:-1]) > 10: 
                             sections.append(section[-loopDist:])
                             assert(section[-loopDist:][0] == section[-loopDist:][-1])
                             section = section[:-loopDist+1]
@@ -156,20 +157,22 @@ def findFloats(listOfFloats, value):
 def analyzeSections(sections):
     i = 0
     size = []
-    for section in sections:
-        difficulty = assignDifficulty(section)
-        if i == 0:
-            size.append((difficulty, i))
-        else:
-            for j in range(len(size)):
-                if size[j][0] < difficulty:
-                    size.insert(j, (difficulty, i))
-                    break
+    while len(size) != len(sections):
+        for section in sections:
+            difficulty = assignDifficulty(section)
+            if i == 0:
+                size.append((difficulty, i))
+            else:
+                    for j in range(len(size)):
+                        if size[j][0] < difficulty:
+                            size.insert(j, (difficulty, i))
+                            break
+                        elif j+1 == len(size):
+                            print("yes")
+                            size.insert(j+1, (difficulty, i))
+            i += 1
     return size
-
-
-
-        
+   
 def assignDifficulty(section):
     i = 0
     avgSteep = 0
@@ -183,9 +186,9 @@ def assignDifficulty(section):
             elevationChange = elev - lastElev
             distance = findDistance(lastLat, lastLon, lat, lon)*1000
             ratio = abs(atan(elevationChange/distance))
-            lastLat = point.latitude
-            lastLon = point.longitude
-            lastElev = point.elevation
+            lastLat = lat
+            lastLon = lon
+            lastElev = elev
             avgSteep += ratio
         i += 1
     avgSteep /= i

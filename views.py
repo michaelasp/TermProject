@@ -36,6 +36,8 @@ def viewAddGPX(canvas, data):
     for i in range(len(data.files)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.files[i], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))
+    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
+        str(int(unitH/2)))
 
 def viewProgress(canvas, data):
     unitW = data.unitW
@@ -54,6 +56,8 @@ def viewRides(canvas, data):
     for i in range(len(data.curRides)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))
+    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
+        str(int(unitH/2)))
 
 def viewLogin(canvas, data):
     unitW = data.unitW
@@ -61,6 +65,8 @@ def viewLogin(canvas, data):
     for i in range(len(data.curUsers)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curUsers[i][1], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))    
+    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
+        str(int(unitH/2)))
 
 def plotPoints(canvas, data):
     unitW = data.unitW
@@ -88,7 +94,7 @@ def plotPoints(canvas, data):
                     canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 i += 1
-    sections = findSections(gpxFile)
+    sections = data.sections
     j = 0
     for section in sections:
         i = 0
@@ -122,6 +128,7 @@ def plotDifficulty(canvas, data):
     elevationChange = 0
     elevation = 0
     point1 = None
+
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
@@ -129,7 +136,6 @@ def plotDifficulty(canvas, data):
                 posY = point.longitude - min_lon
                 ratioX = posX / totalChangex
                 ratioY = posY / totalChangey
-                
                 if i == 0:
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                     elevation = point.elevation
@@ -172,9 +178,15 @@ def viewRecommend(canvas, data):
     totalChangex = max_lat - min_lat
     totalChangey = max_lon - min_lon
     gpx = gpxpy.parse(gpxFile)
-    sections = findSections(gpxFile)
+    sections = data.sections
     i=0
     point1 = None
+    canvas.create_text(unitW*5, unitH*.5, text = "Gnarly", font = "Arial " + 
+        str(int(unitH/2)))
+    canvas.create_text(unitW*10, unitH*.5, text = "Challenging", font = "Arial " + 
+        str(int(unitH/2)))
+    canvas.create_text(unitW*15, unitH*.5, text = "Flowy", font = "Arial " + 
+        str(int(unitH/2)))
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
@@ -190,12 +202,37 @@ def viewRecommend(canvas, data):
                     canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 i += 1
-    sorted = analyzeSections(sections)
-    if len(sorted) > 2:
-        div = len(sorted) // 3
-        extra = (len(sorted) % 3) // 2
-        sortedFlow = sorted[:] 
-        sortedChal = sorted[]
-        sortedGnar = sorted[]
+    sortedSec = analyzeSections(sections)
+    if len(sortedSec) > 2:
+        div = len(sortedSec) // 3
+        extra = (len(sortedSec) % 3) // 2
+        sortedFlow = sortedSec[div*2+extra:] 
+        sortedChal = sortedSec[div*1:div*2+extra]
+        sortedGnar = sortedSec[:div*1]
+    elif len(sortedSec) == 2:
+        sortedGnar = [sortedSec[0]]
+        sortedFlow = [sortedSec[1]]
+        sortedChal = [(None, None)]
+    else:
+        sortedFlow = sortedSec
+        sortedChal = [(None, None)]
+        sortedGnar = [(None, None)]
+    assert(sortedFlow != sortedChal)
+    sortedSec = [sortedGnar, sortedChal, sortedFlow]
+    print(sortedSec)
+    for (_, elem) in sortedSec[trailType]:
+        if elem != None:
+            i = 0
+            for pointX, pointY, _ in sections[elem]:
+                posX = pointX - min_lat
+                posY = pointY - min_lon
+                ratioX = posX / (totalChangex)
+                ratioY = posY / (totalChangey)
+                if i == 0:
+                        point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                else:
+                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY), fill = "blue")
+                    point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
+                i += 1
 
     

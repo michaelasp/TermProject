@@ -79,7 +79,7 @@ def redrawAll(canvas, data):
     elif data.mode == "pickRecommend":
         viewPickRecommend(canvas,data)
     elif data.mode == "recommend":
-        plotDifficulty(canvas, data)
+        viewRecommend(canvas, data)
 
 #Run function from tkinter notes
 def run(width=300, height=300):

@@ -60,7 +60,7 @@ def mouseProgress(event, data):
     if unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
         data.curRides = retrieveRides(data)
         data.mode = "pickRide"
-
+        
 def mouseRides(event, data):
     unitW = data.unitW
     unitH = data.unitH
@@ -68,6 +68,7 @@ def mouseRides(event, data):
     if selected <= len(data.curRides) - 1:
         data.plot = data.curRides[selected]
         data.mode = "plot"
+        data.sections = findSections(data.plot)
 
 def mousePickRecommend(event, data):
     unitW = data.unitW
@@ -77,6 +78,7 @@ def mousePickRecommend(event, data):
         data.picked = data.curRides[selected]
         data.mode = "recommend"
         data.trailType = 0
+        data.sections = findSections(data.picked)
 
 def keyCreate(event, data):
     unitW = data.unitW
@@ -97,6 +99,7 @@ def keyAddGPX(event, data):
     unitH = data.unitH
     if event.keysym == "BackSpace":
         data.mode = "view"
+        data.currentPage = 0
     elif event.keysym == "Left":
         if data.currentPage > 0:
             data.currentPage -= 1
@@ -169,3 +172,4 @@ def keyReccomend(event, data):
     elif event.keysym == "Right":
         if data.trailType < 2:
             data.trailType += 1
+    print(data.trailType)
