@@ -3,7 +3,7 @@ from changeDB import add_gpxFile
 from select import *
 from math import sin, cos, sqrt, atan, radians, atan2
 import math
-from api import getApi
+
 import gpxpy
 import copy
 
@@ -197,7 +197,7 @@ def assignDifficulty(section):
     return avgSteep
 
 #Requests from https://developers.google.com/maps/documentation/maps-static/dev-guide
-def retrieveMap(minLat, maxLat, minLon, maxLon, data, path):
+"""def retrieveMap(minLat, maxLat, minLon, maxLon, data, path):
     #"&path=weight:3|color:orange"\
     apiKey = getApi()
     base = "https://maps.googleapis.com/maps/api/staticmap?"
@@ -208,7 +208,7 @@ def retrieveMap(minLat, maxLat, minLon, maxLon, data, path):
     #meters_per_pixel = 156543.03392 * math.cos(centerY * math.pi / 180) / 2**zoom
     request = base +"center="+ str(centerY)+"," + str(centerX) + "&size="+ size + path + "&zoom=11&format=gif&scale=2&key=" + apiKey
     print(request)
-    return request
+    return request"""
 
 def encodePath(gpxFile):
     gpx = gpxpy.parse(gpxFile)

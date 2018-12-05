@@ -7,55 +7,55 @@ import gpxpy
 def selectScreen(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
-    canvas.create_rectangle(unitW*2, unitH*5, unitW*9, unitH*15)
-    canvas.create_rectangle(unitW*11, unitH*5, unitW*18, unitH*15)
-    canvas.create_text(unitW*5.5, unitH*10, text = "New User", font = "Arial " + str(int(unitH)))
-    canvas.create_text(unitW*14.5, unitH*10, text = "Login", font = "Arial " + str(int(unitH)))
+    canvas.create_rectangle(unitW*2, unitH*5, unitW*9, unitH*15, activefill = "gray", width = 0)
+    canvas.create_rectangle(unitW*11, unitH*5, unitW*18, unitH*15, activefill = "gray", width = 0)
+    canvas.create_text(unitW*5.5, unitH*10, text = "New User", font = "Arial " + str(int(unitH)), fill = "white")
+    canvas.create_text(unitW*14.5, unitH*10, text = "Login", font = "Arial " + str(int(unitH)), fill = "white")
 
 def createScreen(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
-    canvas.create_rectangle(unitW*4, unitH*8, unitW*16, unitH*12)
-    canvas.create_text(unitW*5, unitH*9, text = data.newUser, anchor = NW, font = "Arial " + str(int(unitH)))
-    canvas.create_rectangle(unitW*6, unitH*18, unitW*14, unitH*20)
-    canvas.create_text(unitW*12, unitH*19, text = "Cancel", font = "Arial " + 
-        str(int(unitH)))
+    canvas.create_rectangle(unitW*4, unitH*8, unitW*16, unitH*12, fill = "gray", width = 0)
+    canvas.create_text(unitW*5, unitH*9, text = data.newUser, anchor = NW, font = "Arial " + str(int(unitH)), fill = "white")
+    canvas.create_rectangle(unitW*6, unitH*18, unitW*14, unitH*20, activefill = "gray", width = 0)
+    canvas.create_text(unitW*10, unitH*19, text = "Cancel", font = "Arial " + 
+        str(int(unitH)), fill = "white")
 
 def viewScreen(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     canvas.create_text(unitW*7, unitH*1, text = "Welcome " + data.name, anchor = NW, font = "Arial " + 
-        str(int(unitH)))
-    canvas.create_rectangle(unitW*1, unitH*7, unitW*8, unitH*13)
-    canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13)
-    canvas.create_rectangle(unitW*6, unitH*18, unitW*14, unitH*20)
-    canvas.create_text(unitW*4.5, unitH*10, text = "New Activity", font = "Arial " + str(int(unitH/1.5)))
-    canvas.create_text(unitW*15.5, unitH*10, text = "Recommendations", font = "Arial " + str(int(unitH/1.5)))
+        str(int(unitH)), fill = "white")
+    canvas.create_rectangle(unitW*1, unitH*7, unitW*8, unitH*13, activefill = "gray", width = 0)
+    canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13, activefill = "gray", width = 0)
+    canvas.create_rectangle(unitW*6, unitH*18, unitW*14, unitH*20, activefill = "gray", width = 0)
+    canvas.create_text(unitW*4.5, unitH*10, text = "New Activity", font = "Arial " + str(int(unitH/1.5)), fill = "white")
+    canvas.create_text(unitW*15.5, unitH*10, text = "Recommendations", font = "Arial " + str(int(unitH/1.5)), fill = "white")
     canvas.create_text(unitW*7, unitH*18, text = "Input a new file", anchor = NW, font = "Arial " + 
-        str(int(unitH)))
+        str(int(unitH)), fill = "white")
 
 def viewAddGPX(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.files)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.files[i], anchor = NW, font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
     canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
 
 def viewProgress(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     canvas.create_text(unitW*10, unitH*.5, text = "You have done " + str(data.totalMiles) + " Miles", font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
     canvas.create_text(unitW*10, unitH*1.5, text = "You have done " + str(len(data.totalRides)) + " Activities Total", font = "Arial " + 
-        str(int(unitH/2)))
-    canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13)
+        str(int(unitH/2)), fill = "white")
+    canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13, activefill = "gray", width = 0)
     canvas.create_text(unitW*15.5, unitH*10, text = "View Activities", font = "Arial " + 
-        str(int(unitH/1.5)))
-    canvas.create_rectangle(unitW*1, unitH*7, unitW*8, unitH*13)
+        str(int(unitH/1.5)), fill = "white")
+    canvas.create_rectangle(unitW*1, unitH*7, unitW*8, unitH*13, activefill = "gray", width = 0)
     canvas.create_text(unitW*4.5, unitH*10, text =  "View Sections", font = "Arial " + 
-        str(int(unitH/1.5)))
+        str(int(unitH/1.5)), fill = "white")
 
 def viewRides(canvas, data):
     unitW = data.unitW
@@ -64,16 +64,16 @@ def viewRides(canvas, data):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
         str(int(unitH/2)))
     canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
 
 def viewLogin(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.curUsers)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curUsers[i][1], anchor = NW, font = "Arial " + 
-        str(int(unitH/2)))    
+        str(int(unitH/2)), fill = "white")    
     canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
     
     
 
@@ -160,7 +160,7 @@ def viewPickRecommend(canvas, data):
     unitH = data.unitH
     for i in range(len(data.curRides)):
         canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
-        str(int(unitH/2)))
+        str(int(unitH/2)), fill = "white")
 
 def viewRecommend(canvas, data):
     unitW = data.unitW
