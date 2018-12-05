@@ -54,6 +54,10 @@ def keyPressed(event, data):
         keyPickReccomend(event, data)
     elif data.mode == "recommend":
         keyReccomend(event, data)
+    elif data.mode == "viewSeg":
+        keyViewSeg(event, data)
+    elif data.mode == "view":
+        keyView(event, data)
 
 
 def timerFired(data):
@@ -80,6 +84,8 @@ def redrawAll(canvas, data):
         viewPickRecommend(canvas,data)
     elif data.mode == "recommend":
         viewRecommend(canvas, data)
+    elif data.mode == "viewSeg":
+        viewSections(canvas, data)
 
 #Run function from tkinter notes
 def run(width=300, height=300):

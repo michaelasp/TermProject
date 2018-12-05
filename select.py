@@ -21,7 +21,3 @@ def select_users(conn):
     cur.execute("SELECT * FROM users")
     users = cur.fetchall()
     return users
-
-
-
-

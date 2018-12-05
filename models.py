@@ -2,6 +2,8 @@ from findFolder import *
 from changeDB import add_gpxFile
 from select import *
 from math import sin, cos, sqrt, atan, radians, atan2
+import math
+from api import getApi
 import gpxpy
 import copy
 
@@ -81,8 +83,8 @@ def findSections(full):
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
-                posX = point.latitude
-                posY = point.longitude
+                posX = point.longitude
+                posY = point.latitude
                 #posX, posY = float("%.3f" % (2 * posX)), float("%.3f" % (2 * posY))
                 if i != 0:
                     plotNext = True
@@ -177,7 +179,7 @@ def assignDifficulty(section):
     i = 0
     avgSteep = 0
     for point in section:
-        lat, lon, elev = point
+        lon, lat, elev = point
         if i == 0:
             lastElev = elev
             lastLat = lat
@@ -193,3 +195,31 @@ def assignDifficulty(section):
         i += 1
     avgSteep /= i
     return avgSteep
+
+#Requests from https://developers.google.com/maps/documentation/maps-static/dev-guide
+def retrieveMap(minLat, maxLat, minLon, maxLon, data, path):
+    #"&path=weight:3|color:orange"\
+    apiKey = getApi()
+    base = "https://maps.googleapis.com/maps/api/staticmap?"
+    size =  str(data.width//2) +"x" + str(data.height//2)
+    centerX = minLon + (maxLon-minLon)/2
+    centerY = minLat + (maxLat-minLat)/2
+    weight = 5
+    #meters_per_pixel = 156543.03392 * math.cos(centerY * math.pi / 180) / 2**zoom
+    request = base +"center="+ str(centerY)+"," + str(centerX) + "&size="+ size + path + "&zoom=11&format=gif&scale=2&key=" + apiKey
+    print(request)
+    return request
+
+def encodePath(gpxFile):
+    gpx = gpxpy.parse(gpxFile)
+    path = "&path=color:0x0000ff|weight:5|"
+    i = 0
+    for track in gpx.tracks:
+        for segment in track.segments:
+            for point in segment.points:
+                if i%10 == 0:
+                    path += str(point.latitude) + "," + str(point.longitude) + "|"
+                i+=1
+    return path[:-1]
+
+

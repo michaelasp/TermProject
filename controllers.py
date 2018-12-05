@@ -1,7 +1,7 @@
 import string
 from changeDB import *
 from models import *
-
+from image_util import *
 
 def mouseSelect(event, data):
     unitW = data.unitW
@@ -60,6 +60,11 @@ def mouseProgress(event, data):
     if unitW * 12 <= event.x <= unitW * 19 and unitH * 7 <= event.y <= unitH * 13:
         data.curRides = retrieveRides(data)
         data.mode = "pickRide"
+        data.viewSeg = False
+    elif unitW * 1 <= event.x <= unitW * 8 and unitH * 7 <= event.y <= unitH * 13:
+        data.curRides = retrieveRides(data)
+        data.mode = "pickRide"
+        data.viewSeg = True        
         
 def mouseRides(event, data):
     unitW = data.unitW
@@ -67,7 +72,11 @@ def mouseRides(event, data):
     selected = int((event.y // (2*unitH)))
     if selected <= len(data.curRides) - 1:
         data.plot = data.curRides[selected]
-        data.mode = "plot"
+        if data.viewSeg == False:
+            data.mode = "plot"
+        else:
+            data.mode = "viewSeg"
+            (_,_,gpxFile,_, min_lat, min_lon, max_lat, max_lon,_) = data.plot
         data.sections = findSections(data.plot)
 
 def mousePickRecommend(event, data):
@@ -79,6 +88,15 @@ def mousePickRecommend(event, data):
         data.mode = "recommend"
         data.trailType = 0
         data.sections = findSections(data.picked)
+        data.colors = {0:"red", 1:"black", 2:"black"}
+
+def mouseCreate(event, data):
+    unitW = data.unitW
+    unitH = data.unitH
+    if unitW * 7 <= event.x <= unitW * 13 and unitH * 18 <= event.y <= unitH * 20:
+        data.newUser = ""
+        data.mode = "select"
+
 
 def keyCreate(event, data):
     unitW = data.unitW
@@ -168,8 +186,23 @@ def keyReccomend(event, data):
         data.mode = "pickRecommend"
     elif event.keysym == "Left":
         if data.trailType > 0:
+            data.colors[data.trailType] = "black"
             data.trailType -= 1
+            data.colors[data.trailType] = "red"
     elif event.keysym == "Right":
         if data.trailType < 2:
+            data.colors[data.trailType] = "black"
             data.trailType += 1
+            data.colors[data.trailType] = "red"
     print(data.trailType)
+
+def keyViewSeg(event, data):
+    if event.keysym == "BackSpace":
+        data.mode = "pickRide"
+
+def keyView(event, data):
+    if event.keysym == "BackSpace":
+        data.mode = "select"
+        data.id = 0
+        data.name = ""
+        data.newUser = ""
