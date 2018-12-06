@@ -1,3 +1,4 @@
+#Event controllers for tkinter
 import string
 from changeDB import *
 from models import *
@@ -7,12 +8,9 @@ def mouseSelect(event, data):
     unitW = data.unitW
     unitH = data.unitH
     if unitW * 2 <= event.x <= unitW * 9 and unitH * 5 <= event.y <= unitH * 15:
-        print("yes")
         data.mode = "create"
     elif unitW * 11 <= event.x <= unitW * 18 and unitH * 5 <= event.y <= unitH * 15:
-        print("no")
         data.curUsers = retrieveUsers(data)
-        print(data.curUsers)
         data.mode = "login"
 
 def mouseLogin(event, data):
@@ -42,7 +40,6 @@ def mouseAddGPX(event, data):
     unitW = data.unitW
     unitH = data.unitH
     selected = int((event.y // (2*unitH)))
-    print(data.files)
     if selected <= len(data.files) - 1:
         if "." not in data.files[selected]:
             if data.path == ".":
@@ -50,7 +47,6 @@ def mouseAddGPX(event, data):
             else:
                 data.path += data.files[selected] + "/"
         else:
-            print("yes")
             addGPX(data, selected)
     data.files = retrieveFiles(data)
 
@@ -88,7 +84,7 @@ def mousePickRecommend(event, data):
         data.mode = "recommend"
         data.trailType = 0
         data.sections = findSections(data.picked)
-        data.colors = {0:"red", 1:"black", 2:"black"}
+        data.colors = {0:"red", 1:"white", 2:"white"}
 
 def mouseCreate(event, data):
     unitW = data.unitW
@@ -101,13 +97,13 @@ def mouseCreate(event, data):
 def keyCreate(event, data):
     unitW = data.unitW
     unitH = data.unitH
-    print(event.keysym)
     if event.keysym in string.ascii_uppercase or event.keysym in string.ascii_lowercase:
         data.newUser += event.keysym
     elif event.keysym == "BackSpace" and data.newUser != "":
         data.newUser = data.newUser[:-1]
     elif event.keysym == "Return" and data.newUser != '':
         data.id = add_user(data.conn, data.newUser)
+        data.users = select_users(data.conn)
         data.name = data.newUser
         data.newUser = ""
         data.mode = "view"
@@ -118,6 +114,7 @@ def keyAddGPX(event, data):
     if event.keysym == "BackSpace":
         data.mode = "view"
         data.currentPage = 0
+        data.path = "."
     elif event.keysym == "Left":
         if data.currentPage > 0:
             data.currentPage -= 1
@@ -186,15 +183,14 @@ def keyReccomend(event, data):
         data.mode = "pickRecommend"
     elif event.keysym == "Left":
         if data.trailType > 0:
-            data.colors[data.trailType] = "black"
+            data.colors[data.trailType] = "white"
             data.trailType -= 1
             data.colors[data.trailType] = "red"
     elif event.keysym == "Right":
         if data.trailType < 2:
-            data.colors[data.trailType] = "black"
+            data.colors[data.trailType] = "white"
             data.trailType += 1
             data.colors[data.trailType] = "red"
-    print(data.trailType)
 
 def keyViewSeg(event, data):
     if event.keysym == "BackSpace":

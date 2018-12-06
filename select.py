@@ -1,3 +1,4 @@
+#Selects users and gpx files
 import sqlite3
 from sqlite3 import Error
 from createDB import create_connection

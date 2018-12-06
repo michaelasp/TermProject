@@ -1,3 +1,4 @@
+#Adds users/ gpxfiles
 import sqlite3
 from sqlite3 import Error
 from createDB import create_connection
@@ -5,6 +6,7 @@ import os
 import gpxpy
 import models
 
+#Heavily modified from http://www.sqlitetutorial.net/sqlite-python/
 def create_user(conn, user):
     sql = ''' INSERT INTO users(name)
               VALUES(?) '''

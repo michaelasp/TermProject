@@ -1,3 +1,4 @@
+#Finds Folders when Inputting files
 import os
 def findGPX(path):
     folders = []
@@ -9,4 +10,5 @@ def findGPX(path):
             else:
                 files.append(filename)
     return (folders, files)
+
 

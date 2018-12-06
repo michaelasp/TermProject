@@ -1,3 +1,5 @@
+#All the Views
+
 from tkinter import *
 from image_util import *
 from models import *
@@ -24,12 +26,12 @@ def createScreen(canvas, data):
 def viewScreen(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
-    canvas.create_text(unitW*7, unitH*1, text = "Welcome " + data.name, anchor = NW, font = "Arial " + 
+    canvas.create_text(unitW*10, unitH*2, text = "Welcome " + data.name, font = "Arial " + 
         str(int(unitH)), fill = "white")
     canvas.create_rectangle(unitW*1, unitH*7, unitW*8, unitH*13, activefill = "gray", width = 0)
     canvas.create_rectangle(unitW*12, unitH*7, unitW*19, unitH*13, activefill = "gray", width = 0)
     canvas.create_rectangle(unitW*6, unitH*18, unitW*14, unitH*20, activefill = "gray", width = 0)
-    canvas.create_text(unitW*4.5, unitH*10, text = "New Activity", font = "Arial " + str(int(unitH/1.5)), fill = "white")
+    canvas.create_text(unitW*4.5, unitH*10, text = "View Activities", font = "Arial " + str(int(unitH/1.5)), fill = "white")
     canvas.create_text(unitW*15.5, unitH*10, text = "Recommendations", font = "Arial " + str(int(unitH/1.5)), fill = "white")
     canvas.create_text(unitW*7, unitH*18, text = "Input a new file", anchor = NW, font = "Arial " + 
         str(int(unitH)), fill = "white")
@@ -38,10 +40,11 @@ def viewAddGPX(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.files)):
-        canvas.create_text(unitW*7, unitH*2*i, text = data.files[i], anchor = NW, font = "Arial " + 
+        canvas.create_rectangle(0, unitH*2*i, unitW*20, unitH*2*(i+1), activefill = "gray", width = 0)
+        canvas.create_text(unitW*10, unitH*2*i+unitH, text = data.files[i], font = "Arial " + 
         str(int(unitH/2)), fill = "white")
-    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
-        str(int(unitH/2)), fill = "white")
+    canvas.create_text(unitW, unitH*.5, text = "Page: " + str(data.currentPage+1), font = "Arial " + 
+        str(int(unitH/2)), fill = "white", anchor = NW)
 
 def viewProgress(canvas, data):
     unitW = data.unitW
@@ -61,19 +64,21 @@ def viewRides(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.curRides)):
-        canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
-        str(int(unitH/2)))
-    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
+        canvas.create_rectangle(0, unitH*2*i, unitW*20, unitH*2*(i+1), activefill = "gray", width = 0)
+        canvas.create_text(unitW*10, unitH*2*i+unitH, text = data.curRides[i][1], font = "Arial " + 
         str(int(unitH/2)), fill = "white")
+    canvas.create_text(unitW, unitH*.5, text = "Page: " + str(data.currentPage+1), font = "Arial " + 
+        str(int(unitH/2)), fill = "white", anchor = NW)
 
 def viewLogin(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.curUsers)):
-        canvas.create_text(unitW*7, unitH*2*i, text = data.curUsers[i][1], anchor = NW, font = "Arial " + 
-        str(int(unitH/2)), fill = "white")    
-    canvas.create_text(unitW*10, unitH*19.5, text = "Page: " + str(data.currentPage), font = "Arial " + 
+        canvas.create_rectangle(0, unitH*2*i, unitW*20, unitH*2*(i+1), activefill = "gray", width = 0)
+        canvas.create_text(unitW*10, unitH*2*i+unitH, text = data.curUsers[i][1], font = "Arial " + 
         str(int(unitH/2)), fill = "white")
+    canvas.create_text(unitW, unitH*.5, text = "Page: " + str(data.currentPage+1), font = "Arial " + 
+        str(int(unitH/2)), fill = "white", anchor = NW)
     
     
 
@@ -112,7 +117,7 @@ def plotPoints(canvas, data):
                     else:
                         r = int((255/.15) * ratio)
                     rgb = rgbString(r, 255-r, 0)
-                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY), fill = rgb)
+                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY), fill = rgb, width = 2)
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                     lastLat = point.latitude
                     lastLon = point.longitude
@@ -159,9 +164,11 @@ def viewPickRecommend(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
     for i in range(len(data.curRides)):
-        canvas.create_text(unitW*7, unitH*2*i, text = data.curRides[i][1], anchor = NW, font = "Arial " + 
+        canvas.create_rectangle(0, unitH*2*i, unitW*20, unitH*2*(i+1), activefill = "gray", width = 0)
+        canvas.create_text(unitW*10, unitH*2*i+unitH, text = data.curRides[i][1], font = "Arial " + 
         str(int(unitH/2)), fill = "white")
-
+    canvas.create_text(unitW, unitH*.5, text = "Page: " + str(data.currentPage+1), font = "Arial " + 
+        str(int(unitH/2)), fill = "white", anchor = NW)    
 def viewRecommend(canvas, data):
     unitW = data.unitW
     unitH = data.unitH
@@ -193,7 +200,7 @@ def viewRecommend(canvas, data):
                 if i == 0:
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 else:
-                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY))
+                    canvas.create_line(point1, ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY), fill = "white")
                     point1 = ((ratioX*18*unitW)+marginX, (ratioY*18*unitH)+marginY)
                 i += 1
     sortedSec = analyzeSections(sections)
@@ -213,7 +220,6 @@ def viewRecommend(canvas, data):
         sortedGnar = [(None, None)]
     assert(sortedFlow != sortedChal)
     sortedSec = [sortedGnar, sortedChal, sortedFlow]
-    print(sortedSec)
     j = 0
     for (_, elem) in sortedSec[trailType]:
         if elem != None:

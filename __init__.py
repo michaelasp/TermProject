@@ -1,3 +1,4 @@
+#Main File
 import gpxpy
 import os
 import sqlite3
@@ -35,7 +36,8 @@ def mousePressed(event, data):
         mouseRides(event, data)
     elif data.mode == "pickRecommend":
         mousePickRecommend(event, data)
-
+    elif data.mode == "create":
+        mouseCreate(event, data)
 
 def keyPressed(event, data):
     if data.mode == "create":

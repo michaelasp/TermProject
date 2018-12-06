@@ -1,3 +1,4 @@
+#All the models/ difficult algorithms
 from findFolder import *
 from changeDB import add_gpxFile
 from select import *
@@ -139,8 +140,6 @@ def findSections(full):
                 offset += dist
                 first.add(sections[i][j+1+offset])
                 first.add(sections[i][j+offset])
-                if i == 0 and j == 0:
-                    print(first)
             else:
                 sections[i] = sections[i][:offset+j] + inBetween[(sections[i][j+offset],sections[i][j+1+offset])] + sections[i][j+1+offset:]
                 offset += dist - 1
@@ -170,7 +169,6 @@ def analyzeSections(sections):
                             size.insert(j, (difficulty, i))
                             break
                         elif j+1 == len(size):
-                            print("yes")
                             size.insert(j+1, (difficulty, i))
             i += 1
     return size
